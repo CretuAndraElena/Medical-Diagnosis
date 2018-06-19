@@ -26,8 +26,6 @@ training_data = [[1., 2., 1.0], [2., 3., 1.0], [3., 4., -1.0], [3., 2., -1.0], [
 header = ["x1", "x2"]'''
 
 header, training_data = CSVP.csv_parse("DateAndrenament.csv")
-header_test, test_data = CSVP.csv_parse("DateTest.csv")
-xPrediction=training_data[0]
 
 def continue_attribute(col_number, col, values):
     dict_values = dict()
@@ -281,7 +279,7 @@ def algorithm(data, t):
     col_values = []
     error_values = []
     H = [0] * len(data)
-    print(D)
+
     result = adaBoost(data, D, None)
     D = result[0]
     error_values.append(result[1])
@@ -299,10 +297,6 @@ def algorithm(data, t):
 
     for i in range(0, len(data)):
         H[i] = predict(a_values, h_values, t, data[i], col_values)
-    print("H=", H)
-    print("a=", a_values)
-    print("h=", h_values)
-    print("col=", col_values)
     return (a_values, h_values, col_values)
 
 
@@ -310,11 +304,45 @@ def error(test_data,data,t):
     a_values,h_values,col_values=algorithm(data,t)
     error=0
 
-    print("Prediction",predict(a_values,h_values,t,xPrediction,col_values))
     for data in test_data:
         if data[-1]!=predict(a_values,h_values,t,data,col_values):
             error=error+1
     print("Error=",error/len(test_data))
 
+header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
+print("Error DataSetTest1:")
+error(test_data,training_data,30)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest2.csv")
+print("Error DataSetTest2:")
+error(test_data,training_data,30)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+print("Error DataSetTest3 40 iteratii:")
+error(test_data,training_data,4)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+print("Error DataSetTest3 5 iteratii:")
 error(test_data,training_data,5)
 
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+print("Error DataSetTest3 10 iteratii:")
+error(test_data,training_data,10)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+print("Error DataSetTest3 20 iteratii:")
+error(test_data,training_data,20)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+print("Error DataSetTest3 30 iteratii:")
+error(test_data,training_data,30)
+
+def studiu_de_caz():
+    header,data_set=CSVP.csv_parse("DataSetStudiuDeCaz.csv")
+    a_values,h_values,col_values=algorithm(training_data,3)
+    result=[]
+    for x in data_set:
+        result.append(predict(a_values,h_values,3,x,col_values))
+    print("Rezultate studiu de caz:",result)
+
+studiu_de_caz()

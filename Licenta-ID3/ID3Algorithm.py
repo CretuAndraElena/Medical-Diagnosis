@@ -17,7 +17,7 @@ header = ["size","orbit","temperature","habitable"]
 test_data=[['big','near',280,'yes']]'''
 
 header, training_data = CSVP.csv_parse("DateAndrenament.csv")
-header_test, test_data = CSVP.csv_parse("DateTest.csv")
+header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
 
 def unique_vals(rows, col):  # valorile unice de pe o linie
     return set([row[col] for row in rows])
@@ -226,9 +226,23 @@ class Decision_Node:
     def __str__(self):
         return str(self.attribute)
 
-
+header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
 id3 = ID3(header, training_data, test_data)
-'''id3.print_tree(id3.tree)
-print(test_data[0])
-print(id3.classify(test_data[0], id3.tree))
-print("Error:", id3.calculate_error())'''
+print("Error DataSetTest1:", id3.calculate_error())
+
+header_test, test_data = CSVP.csv_parse("DataSetTest2.csv")
+id3 = ID3(header, training_data, test_data)
+print("Error DataSetTest2:", id3.calculate_error())
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+id3 = ID3(header, training_data, test_data)
+print("Error DataSetTest3:", id3.calculate_error())
+
+def studiu_de_caz():
+    header,data_set=CSVP.csv_parse("DataSetStudiuDeCaz.csv")
+    result=[]
+    for x in data_set:
+        result.append(id3.classify(x,id3.tree))
+    print("Rezultate studiu de caz:",result)
+
+studiu_de_caz()

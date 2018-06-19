@@ -4,7 +4,7 @@ import csv
 def csv_parse(file_name):
     data = []
     rows = []
-    with open('./'+file_name) as csvDataFile:
+    with open("./"+file_name) as csvDataFile:
         csv_reader = csv.reader(csvDataFile)
         for row in csv_reader:
             data.append(row)

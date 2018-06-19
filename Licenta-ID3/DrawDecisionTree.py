@@ -1,6 +1,5 @@
 import ID3Algorithm as ID3
 import networkx as nx
-import matplotlib.pyplot as plt
 
 tree=ID3.id3.tree
 preOrderList=[]
@@ -15,8 +14,6 @@ def preorder(tree):
         preorder(tree.true_branch)
 
 preorder(tree)
-
-import networkx as nx
 
 g=nx.DiGraph()
 g.add_edges_from(preOrderList)
