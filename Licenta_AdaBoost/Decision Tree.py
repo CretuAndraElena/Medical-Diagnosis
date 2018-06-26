@@ -1,29 +1,6 @@
-import numpy as np
 import CSVParse as CSVP
-'''training_data = [['big', 'far', 205, -1],
-                 ['big', 'near', 205, -1],
-                 ['big', 'near', 260, 1],
-                 ['big', 'near', 380, 1],
-                 ['small', 'far', 205, -1],
-                 ['small', 'far', 260, 1],
-                 ['small', 'near', 260, 1],
-                 ['small', 'near', 380, -1],
-                 ['small', 'near', 380, -1]]
-
-header = ["size", "orbit", "temperature", "habitable"]
-
-test_data = [['big', 'near', 280, 1],
-             ['big', 'near', 260, 1],
-             ['big', 'near', 380, 1],
-             ['small', 'far', 205, -1],
-             ['small', 'far', 260, 1],
-             ['big', 'far', 205, -1],
-             ['big', 'near', 205, -1]]
-xPrediction=['big', 'near', 280, 1]
-
-training_data = [[1., 2., 1.0], [2., 3., 1.0], [3., 4., -1.0], [3., 2., -1.0], [3., 1., -1.0], [4., 4., -1.0],
-                 [5., 4., -1.0], [5., 2., 1.0], [5., 1., 1.0]]
-header = ["x1", "x2"]'''
+import numpy as np
+import matplotlib.pyplot as plt
 
 header, training_data = CSVP.csv_parse("DateAndrenament.csv")
 
@@ -251,7 +228,7 @@ def h(h_value, x):
 
 def adaBoost(data, D, h_values):
     col, h_value, error = decistion_stemp(data, D, h_values)
-    error=abs(error)
+    error=error
     a = 1 / 2 * np.log((1 - error) / error)
     for i in range(0, len(data)):
         e = np.e ** (-1 * a)
@@ -287,7 +264,7 @@ def algorithm(data, t):
     h_values.append(result[3])
     col_values.append(result[4])
 
-    for i in range(1, t):
+    for i in range(1, t+1):
         result = adaBoost(data, D, h_values[i - 1])
         D = result[0]
         error_values.append(result[1])
@@ -307,42 +284,44 @@ def error(test_data,data,t):
     for data in test_data:
         if data[-1]!=predict(a_values,h_values,t,data,col_values):
             error=error+1
-    print("Error=",error/len(test_data))
-
-header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
-print("Error DataSetTest1:")
-error(test_data,training_data,30)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest2.csv")
-print("Error DataSetTest2:")
-error(test_data,training_data,30)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
-print("Error DataSetTest3 40 iteratii:")
-error(test_data,training_data,4)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
-print("Error DataSetTest3 5 iteratii:")
-error(test_data,training_data,5)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
-print("Error DataSetTest3 10 iteratii:")
-error(test_data,training_data,10)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
-print("Error DataSetTest3 20 iteratii:")
-error(test_data,training_data,20)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
-print("Error DataSetTest3 30 iteratii:")
-error(test_data,training_data,30)
+    return error/len(test_data)
 
 def studiu_de_caz():
     header,data_set=CSVP.csv_parse("DataSetStudiuDeCaz.csv")
-    a_values,h_values,col_values=algorithm(training_data,3)
+    a_values,h_values,col_values=algorithm(training_data,30)
     result=[]
     for x in data_set:
-        result.append(predict(a_values,h_values,3,x,col_values))
+        result.append(predict(a_values,h_values,30,x,col_values))
     print("Rezultate studiu de caz:",result)
 
 studiu_de_caz()
+
+error_list=list()
+
+a=error(training_data,training_data,30)
+print("Error TrainData:",a)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+for i in range(0,31):
+    error_list.append(error(test_data,training_data,i))
+
+
+header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
+a=error(test_data,training_data,30)
+print("Error DataSetTest1:",a)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest2.csv")
+a=error(test_data,training_data,30)
+print("Error DataSetTest2:",a)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+a=error(test_data,training_data,30)
+print("Error DataSetTest3:",a)
+
+plt.plot([i for i in range(0,31)],error_list)
+plt.title('AdaBoost')
+plt.xlabel('No. iteration')
+plt.ylabel('Loss')
+plt.show()
+
+

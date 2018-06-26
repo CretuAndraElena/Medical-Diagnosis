@@ -1,21 +1,30 @@
 import numpy as np
 
 # X = (hours studying, hours sleeping), y = score on test, xPredicted = 4 hours studying & 8 hours sleeping (input data for prediction)
-X = np.array(([2, 9], [1, 5], [3, 6]), dtype=float)
-y = np.array(([92], [86], [89]), dtype=float)
-xPredicted = np.array(([4,8]), dtype=float)
+X = np.array(([1, 1,205],
+              [1, 1, 205],
+              [1, 1,  260],
+              [1, 0, 380],
+              [0, 1, 205],
+              [0, 1, 260],
+              [0, 0,260],
+              [0, 0,380],
+              [0, 0, 380]),dtype=float)
+
+y = np.array(([0],[0],[1],[1],[0],[1],[1],[0],[0]),dtype=float)
+xPredicted = np.array(([0, 0,260]),dtype=float)
 
 # scale units
 X = X/np.amax(X, axis=0) # maximum of X array
 xPredicted = xPredicted/np.amax(xPredicted, axis=0) # maximum of xPredicted (our input data for the prediction)
-y = y/100 # max test score is 100
+y = y # max test score is 100
 
 class Neural_Network(object):
     def __init__(self):
         #parameters
-        self.inputSize = 2
+        self.inputSize = 3
         self.outputSize = 1
-        self.hiddenSize = 3
+        self.hiddenSize = 4
 
         #weights
         self.W1 = np.random.randn(self.inputSize, self.hiddenSize) # (3x2) weight matrix from input to hidden layer
@@ -25,7 +34,6 @@ class Neural_Network(object):
         #forward propagation through our network
         self.z = np.dot(X, self.W1) # dot product of X (input) and first set of 3x2 weights
         self.z2 = self.sigmoid(self.z) # activation function
-        print(self.z2)
         self.z3 = np.dot(self.z2, self.W2) # dot product of hidden layer (z2) and second set of 3x1 weights
         o = self.sigmoid(self.z3) # final activation function
         return o
@@ -64,7 +72,7 @@ class Neural_Network(object):
 
 NN = Neural_Network()
 
-for i in range(2400):
+for i in range(5000):
     print("# " + str(i) + "\n")
     print("Input: \n" + str(X))
     print("Actual Output: \n" + str(y))

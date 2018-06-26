@@ -1,32 +1,16 @@
-
 import math
 import CSVParse as CSVP
 
-'''training_data = [['big', 'far',205, 'no'],
-                 ['big', 'near', 205, 'no'],
-                 ['big', 'near',  260, 'yes'],
-                 ['big', 'near', 380, 'yes'],
-                 ['small', 'far', 205, 'no'],
-                 ['small', 'far', 260, 'yes'],
-                 ['small', 'near',260, 'yes'],
-                 ['small', 'near',380, 'no'],
-                 ['small', 'near', 380, 'no']]
-
-header = ["size","orbit","temperature","habitable"]
-
-test_data=[['big','near',280,'yes']]'''
-
 header, training_data = CSVP.csv_parse("DateAndrenament.csv")
-header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
 
-def unique_vals(rows, col):  # valorile unice de pe o linie
+def unique_vals(rows, col):  # valorile unice de pe o coloana
     return set([row[col] for row in rows])
 
 
 def label_counts(rows):
-    counts = {}  # a dictionary of label -> count.
+    counts = {}  # a dictionary of class -> count.
     for row in rows:
-        # in our dataset format, the label is always the last column
+        # class is in the last column
         label = row[-1]
         if label not in counts:
             counts[label] = 0
@@ -37,6 +21,24 @@ def label_counts(rows):
 def is_numeric(value):
     return isinstance(value, int) or isinstance(value, float)
 
+class Leaf:
+    def __init__(self, rows):
+        self.predictions = label_counts(rows)
+
+    def __str__(self):
+        return str(self.predictions)
+
+
+class Decision_Node:
+    def __init__(self,
+                 attribute,
+                 true_branch,
+                 false_branch):
+        self.attribute = attribute
+        self.true_branch = true_branch
+        self.false_branch = false_branch
+    def __str__(self):
+        return str(self.attribute)
 
 class Attribute:
 
@@ -207,24 +209,8 @@ class ID3:
         return error / len(self.test_data)
 
 
-class Leaf:
-    def __init__(self, rows):
-        self.predictions = label_counts(rows)
-
-    def __str__(self):
-        return str(self.predictions)
-
-
-class Decision_Node:
-    def __init__(self,
-                 attribute,
-                 true_branch,
-                 false_branch):
-        self.attribute = attribute
-        self.true_branch = true_branch
-        self.false_branch = false_branch
-    def __str__(self):
-        return str(self.attribute)
+id3 = ID3(header, training_data, training_data)
+print("Error TrainData:", id3.calculate_error())
 
 header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
 id3 = ID3(header, training_data, test_data)
@@ -245,4 +231,12 @@ def studiu_de_caz():
         result.append(id3.classify(x,id3.tree))
     print("Rezultate studiu de caz:",result)
 
+
 studiu_de_caz()
+
+import time
+
+id3 = ID3(header, training_data, test_data)
+start_time = time.time()
+studiu_de_caz()
+print("--- %s seconds ---" % (time.time() - start_time))
