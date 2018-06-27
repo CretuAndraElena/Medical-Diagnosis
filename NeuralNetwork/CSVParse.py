@@ -14,7 +14,7 @@ def csv_parse(file_name):
         new_row = [0] * 25
         for i in range(25):
             if i in (0, 1, 2, 3, 4, 9, 10, 11, 12, 13, 14, 15, 16, 17):
-                new_row[i] = float(row[i])
+                new_row[i] = float(row[i])*1000
             else:
                 if row[i] in ("notpresent","normal","no","good","notckd"):
                     new_row[i]=0

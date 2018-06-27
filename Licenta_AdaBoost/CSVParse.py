@@ -26,9 +26,3 @@ def csv_parse(file_name):
         rows.append(new_row)
     return fields, rows
 
-
-'''header,training_data = csv_parse("DataSet.csv")
-
-import pandas as pd
-df = pd.DataFrame(training_data)
-df.to_csv("test_parse.csv")'''

@@ -294,33 +294,30 @@ def studiu_de_caz():
         result.append(predict(a_values,h_values,30,x,col_values))
     print("Rezultate studiu de caz:",result)
 
+import time
+start_time = time.time()
+a=error(training_data,training_data,30)
+time=time.time() - start_time
+
+print("Errorla al antrenare :",a)
+
+header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
+a=error(test_data,training_data,30)
+print("Error la testare:",a)
+
+print("Timpul de antrenare:" ,time)
+
 studiu_de_caz()
 
+#colectare informatii pentru grafic
 error_list=list()
 
-a=error(training_data,training_data,30)
-print("Error TrainData:",a)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
 for i in range(0,31):
-    error_list.append(error(test_data,training_data,i))
-
-
-header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
-a=error(test_data,training_data,30)
-print("Error DataSetTest1:",a)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest2.csv")
-a=error(test_data,training_data,30)
-print("Error DataSetTest2:",a)
-
-header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
-a=error(test_data,training_data,30)
-print("Error DataSetTest3:",a)
+    error_list.append(error(training_data,training_data,i))
 
 plt.plot([i for i in range(0,31)],error_list)
 plt.title('AdaBoost')
-plt.xlabel('No. iteration')
+plt.xlabel('No. iterations')
 plt.ylabel('Loss')
 plt.show()
 

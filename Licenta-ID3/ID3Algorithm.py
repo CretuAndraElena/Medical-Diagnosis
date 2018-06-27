@@ -210,33 +210,23 @@ class ID3:
 
 
 id3 = ID3(header, training_data, training_data)
-print("Error TrainData:", id3.calculate_error())
-
-header_test, test_data = CSVP.csv_parse("DataSetTest1.csv")
-id3 = ID3(header, training_data, test_data)
-print("Error DataSetTest1:", id3.calculate_error())
-
-header_test, test_data = CSVP.csv_parse("DataSetTest2.csv")
-id3 = ID3(header, training_data, test_data)
-print("Error DataSetTest2:", id3.calculate_error())
+print("Eroarea la antrenare:", id3.calculate_error())
 
 header_test, test_data = CSVP.csv_parse("DataSetTest3.csv")
 id3 = ID3(header, training_data, test_data)
-print("Error DataSetTest3:", id3.calculate_error())
+print("Eroarea la testare:", id3.calculate_error())
 
 def studiu_de_caz():
     header,data_set=CSVP.csv_parse("DataSetStudiuDeCaz.csv")
     result=[]
     for x in data_set:
-        result.append(id3.classify(x,id3.tree))
+        result.append(list(id3.classify(x,id3.tree).items())[0][0])
     print("Rezultate studiu de caz:",result)
 
 
 studiu_de_caz()
 
 import time
-
-id3 = ID3(header, training_data, test_data)
 start_time = time.time()
-studiu_de_caz()
-print("--- %s seconds ---" % (time.time() - start_time))
+id3 = ID3(header, training_data, test_data)
+print("Timpul de antrenare:" ,(time.time() - start_time))

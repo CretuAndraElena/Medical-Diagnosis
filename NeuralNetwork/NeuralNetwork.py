@@ -1,7 +1,10 @@
 import numpy as np
 import CSVParse as CSVP
 import matplotlib.pyplot as plt
+import time
 
+import warnings
+warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 def normalizare(matrix):
     new_matrix = []
@@ -31,19 +34,16 @@ class Neural_Network:
         self.W1 = np.random.random((self.inputSize, self.hiddenSize))
         self.W2 = np.random.random((self.hiddenSize, self.outputSize))
 
-        self.bias_hidden = np.random.random((1, self.hiddenSize))
-        self.bias_output = np.random.random((1, self.outputSize))
-
     def sigmoid(self, x):
-        return 1 / (1 + np.exp(-x))
+            return 1 / (1 + np.exp(-x))
 
     def sigmoid_prime(self, x):
         return x * (1 - x)
 
     def forward(self, input):
 
-        self.a = self.sigmoid(np.dot(input, self.W1) + self.bias_hidden)
-        self.o = self.sigmoid(np.dot(self.a, self.W2) + self.bias_output)
+        self.a = self.sigmoid(np.dot(input, self.W1))
+        self.o = self.sigmoid(np.dot(self.a, self.W2))
 
         return self.o
 
@@ -57,9 +57,6 @@ class Neural_Network:
 
         self.W2 += self.a.T.dot(d_output) * self.learning_rate
         self.W1 += X.T.dot(d_hidden) * self.learning_rate
-
-        self.bias_hidden += np.sum(d_hidden) * self.learning_rate
-        self.bias_output += np.sum(d_output) * self.learning_rate
 
     def train(self, X, y):
         o = self.forward(X)
@@ -77,13 +74,13 @@ class Neural_Network:
         np.savetxt("w2.txt", self.W2, fmt="%s")
 
     def error(self, test_data, test_output):
-        return 0.5*np.mean(np.square(test_output - self.forward(test_data)))
+        return 0.5 * np.mean(np.square(test_output - self.forward(test_data)))
 
     def antrenare(self, iterations, train, output):
         loss = list()
         iterationsList = list()
         for i in range(iterations):
-            loss.append(self.error(train,output))
+            loss.append(self.error(train, output))
             iterationsList.append(i)
             self.train(train, output)
         self.saveWeights()
@@ -94,12 +91,16 @@ def main():
     header, training_data = CSVP.csv_parse("DateAntrenament.csv")
     train, output = normalizare(training_data)
     NN = Neural_Network(train)
-    loss, iterations = NN.antrenare(5000, train, output)
-    print("Error TrainData:", NN.error(train,output))
+    start_time = time.time()
+    loss, iterations = NN.antrenare(3000, train, output)
+    t = time.time() - start_time
+    print("Error la antrenare:", NN.error(train, output))
 
     header, test_data = CSVP.csv_parse("DataSetTest3.csv")
     test_data, test_output = normalizare(test_data)
-    print("Error DataSetTest3:", NN.error(test_data, test_output))
+    print("Error la antrenare:", NN.error(test_data, test_output))
+
+    print("Timpul de antrenare:", t)
 
     header, studiu_de_caz = CSVP.csv_parse("DataSetStudiuDeCaz.csv")
     studiu_de_caz, studiu_de_caz_output = normalizare(studiu_de_caz)
@@ -110,10 +111,10 @@ def main():
     print(result)
 
     plt.plot(iterations, loss)
-    plt.title('linear')
-    plt.xlabel('No. iteration')
+    plt.title('Neural Netwotk')
+    plt.xlabel('No. iterations')
     plt.ylabel('Loss')
-    # plt.show()
+    plt.show()
 
 
 main()
